@@ -10,25 +10,25 @@
 
 #ifdef _DEBUG
 
-#define TREE_DUMP_(bst, err) \
+#define BST_DUMP_(bst, err) \
     bst_dump_(bst, err, NULL, __FILE__, __LINE__, __func__); 
 
-#define TREE_DUMP_MSG_(bst, err, msg) \
+#define BST_DUMP_MSG_(bst, err, msg) \
     bst_dump_(bst, err, msg, __FILE__, __LINE__, __func__); 
 
-#define TREE_ASSERT_OK_(dllist)                      \
-    {                                                \
-        bst_err_t err = bst_verify_(bst);         \
-        if(err != TREE_ERR_NONE) {                   \
-            TREE_DUMP_(bst, err);                   \
-            utils_assert(err == TREE_ERR_NONE);      \
-        }                                            \
+#define BST_ASSERT_OK_(dllist)                   \
+    {                                            \
+        bst_err_t err = bst_verify_(bst);        \
+        if(err != BST_ERR_NONE) {                \
+            BST_DUMP_(bst, err);                 \
+            utils_assert(err == BST_ERR_NONE);   \
+        }                                        \
     }
 
-#define TREE_VERIFY_OR_RETURN_(bst, err)       \
-    if(err != TREE_ERR_NONE) {                  \
-        TREE_DUMP_(bst, err);                  \
-        return err;                             \
+#define BST_VERIFY_OR_RETURN_(bst, err)    \
+    if(err != BST_ERR_NONE) {              \
+        BST_DUMP_(bst, err);               \
+        return err;                        \
     }
 
 #else // _DEBUG
@@ -61,14 +61,14 @@ bst_err_t bst_ctor(bst_t* bst, bst_cmp_f cmp_func)
     bst->cmp_func = cmp_func;
     bst->size = 0;
 
-    return TREE_ERR_NONE;
+    return BST_ERR_NONE;
 }
 
 bst_err_t bst_insert(bst_t* bst, bst_data_t data)
 {
-    TREE_ASSERT_OK_(bst);
+    BST_ASSERT_OK_(bst);
 
-    bst_err_t err = TREE_ERR_NONE;
+    bst_err_t err = BST_ERR_NONE;
 
     bst_node_t* parent = bst->root;
     bst_node_t* child = bst->root;
@@ -84,7 +84,7 @@ bst_err_t bst_insert(bst_t* bst, bst_data_t data)
     
     bst_node_t* new_elem;
     err = bst_allocate_new_(&new_elem);
-    TREE_VERIFY_OR_RETURN_(bst, err);
+    BST_VERIFY_OR_RETURN_(bst, err);
     
     new_elem->data = data;
     
@@ -100,20 +100,20 @@ bst_err_t bst_insert(bst_t* bst, bst_data_t data)
 
     ++bst->size;
 
-    TREE_DUMP_(bst, err);
+    BST_DUMP_(bst, err);
 
-    return TREE_ERR_NONE;
+    return BST_ERR_NONE;
 }
 
 
 const char* bst_strerr(bst_err_t err)
 {
     switch(err) {
-        case TREE_ERR_NONE:
+        case BST_ERR_NONE:
             return "none";
-        case TREE_NULLPTR:
+        case BST_NULLPTR:
             return "passed a nullptr";
-        case TREE_ALLOC_FAIL:
+        case BST_ALLOC_FAIL:
             return "memory allocation failed";
         default:
             return "unknown";
@@ -134,11 +134,11 @@ bst_err_t bst_allocate_new_(bst_node_t** ptr)
     bst_node_t* ptr_tmp = (bst_node_t*)calloc(1, sizeof(ptr_tmp[0]));
 
     if(!ptr_tmp)
-        return TREE_ALLOC_FAIL;
+        return BST_ALLOC_FAIL;
 
     *ptr = ptr_tmp;
 
-    return TREE_ERR_NONE;
+    return BST_ERR_NONE;
 }
 
 void bst_node_dtor_(bst_node_t* node)
@@ -190,7 +190,7 @@ void bst_dump_(bst_t* bst, bst_err_t err, const char* msg, const char* filename,
     char time_buff[100];
     strftime(time_buff, sizeof(time_buff), "%F %T", iso_time);
 
-    if(err != TREE_ERR_NONE) {
+    if(err != BST_ERR_NONE) {
         utils_log_fprintf("<h3 style=\"color:red;\">[ERROR] [%s] from %s:%d: %s() </h3>", time_buff, filename, line, funcname);
         utils_log_fprintf("<h4><font color=\"red\">err: %s </font></h4>", bst_strerr(err));
     }
@@ -301,13 +301,13 @@ int bst_dump_node_graphviz_(FILE* file, bst_node_t* node, int rank)
 bst_err_t bst_verify_(bst_t* bst)
 {
     if(!bst)
-        return TREE_NULLPTR;
+        return BST_NULLPTR;
 
     if(!bst->cmp_func)
-        return TREE_FIELD_NULL;
+        return BST_FIELD_NULL;
 
     
-    return TREE_ERR_NONE;
+    return BST_ERR_NONE;
 }
 
 

@@ -1,1 +1,1 @@
-SOURCES += tree.c
+SOURCES += bst.c

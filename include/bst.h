@@ -11,10 +11,10 @@ typedef int (*bst_cmp_f) (bst_data_t*, bst_data_t*);
 
 typedef enum bst_err_t
 {
-    TREE_ERR_NONE,
-    TREE_NULLPTR,
-    TREE_FIELD_NULL,
-    TREE_ALLOC_FAIL
+    BST_ERR_NONE,
+    BST_NULLPTR,
+    BST_FIELD_NULL,
+    BST_ALLOC_FAIL
 } bst_err_t;
 
 typedef struct bst_node_t

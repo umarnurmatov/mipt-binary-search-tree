@@ -1,12 +1,18 @@
-#include "tree.h"
+#include "bst.h"
 #include "optutils.h"
 #include "utils.h"
 #include "logutils.h"
+#include <cstring>
 
 static utils_long_opt_t long_opts[] = 
 {
     { OPT_ARG_REQUIRED, "log", NULL, 0, 0 },
 };
+
+int cmp_func(bst_data_t* a, bst_data_t* b)
+{
+    return a >= b;
+}
 
 int main(int argc, char* argv[])
 {
@@ -14,21 +20,22 @@ int main(int argc, char* argv[])
 
     utils_init_log_file(long_opts[0].arg, "log");
 
-    tree_t tree;
+    bst_t bst = {
+        .root = NULL,
+        .cmp_func = NULL,
+        .size = 0,
+    };
 
-    tree_insert(&tree, 6);
+    bst_err_t err = BST_ERR_NONE;
 
-    tree_insert(&tree, 2);
+    bst_ctor(&bst, (bst_cmp_f)cmp_func);
 
-    tree_insert(&tree, 0);
-
-    tree_insert(&tree, 4);
-
-    tree_insert(&tree, 8);
+    bst_insert(&bst, 1);
     
-    tree_insert(&tree, 5);
 
-    tree_dtor(&tree);
+    bst_dtor(&bst);
+
+    utils_end_log();
 
     return EXIT_SUCCESS;
 }
